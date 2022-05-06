@@ -20,4 +20,6 @@ public class Order {
 	private String side;
 	private Integer quantity;
 	private Double price;
+	private String status;
+	private String failureReason;
 }

@@ -1,6 +1,5 @@
 server:
   port: 9000
-  
 
 spring:
   application:
@@ -14,3 +13,34 @@ eureka:
   client:
     service-url: 
       defaultZone: ${EUREKA_URI:http://localhost:10000/eureka}
+      
+      
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
+      
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        slidingWindowSize: 5
+        slidingWindowType: COUNT_BASED
+        waitDurationInOpenState: 5s
+        eventConsumerBufferSize: 10
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+    instances:
+      createPosition:
+        baseConfig: default
+      
