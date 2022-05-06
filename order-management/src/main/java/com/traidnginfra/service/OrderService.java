@@ -11,6 +11,8 @@ import com.traidnginfra.model.Order;
 import com.traidnginfra.model.Position;
 import com.traidnginfra.repository.OrderRepository;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 @Service
 public class OrderService {
 
@@ -19,7 +21,14 @@ public class OrderService {
 	
 	@Autowired
 	private RestTemplate restTemplate;
+	
 
+	private Position createPosition(Position position) {
+		ResponseEntity<Position> positionResponse= restTemplate.postForEntity("http://INFRA-GATEWAY/position/createposition", position, Position.class);
+		return positionResponse.getBody();
+	}
+	
+	@CircuitBreaker(name = "createPosition", fallbackMethod = "placeOrderFallback")
 	public Order placeOrder(Order order) {
 		Position position= Position.builder()
 							.price(order.getPrice())
@@ -27,18 +36,21 @@ public class OrderService {
 							.side(order.getSide())
 							.symbol(order.getSymbol())
 							.build();
-		ResponseEntity<Position> positionResponse=restTemplate.postForEntity("http://localhost:9001/position/createposition", position, Position.class);
-
-		Position p=positionResponse.getBody();
+		Position openPos= this.createPosition(position);
 		return orderRepository.save(Order.builder()
-											.positionId(p.getPositionId())
-											.price(order.getPrice())
-											.quantity(order.getQuantity())
-											.side(order.getSide())
-											.symbol(order.getSymbol())
-											.build());
+								.positionId(openPos.getPositionId())
+								.price(order.getPrice())
+								.quantity(order.getQuantity())
+								.side(order.getSide())
+								.symbol(order.getSymbol())
+								.status("Success")
+								.build());
 	}
 
+	private Order placeOrderFallback(Order order, Throwable e) {
+		return Order.builder().status("Failure").failureReason("Could not place the order, please check order details").build();
+	}
+	
 	public List<Order> fetchOrders() {
 		return orderRepository.findAll();
 	}
