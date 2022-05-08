@@ -4,12 +4,3 @@ server:
 spring:
   application:
     name: POSITION-MANAGER
-  data:
-    mongodb:
-      uri: mongodb+srv://${MONGO_USER_ID}:${MONGO_PWD}@cluster0.dnhdt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
-      database: trading_infra
-
-eureka:
-  client:
-    service-url: 
-      defaultZone: ${EUREKA_URI:http://localhost:10000/eureka}

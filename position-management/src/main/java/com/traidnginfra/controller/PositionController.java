@@ -22,7 +22,7 @@ public class PositionController {
 	
 	@PostMapping(path="/createposition")
 	public ResponseEntity<Position> createPosition(@RequestBody Position position) {
-		if(Math.random() > 0.9)
+		if(Math.random() > 0.5)
 			return ResponseEntity.ok(positionService.createPosition(position));
 		else
 			throw new RuntimeException("Not able to create position");
