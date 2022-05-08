@@ -3,6 +3,7 @@ package com.traidnginfra.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -22,9 +23,11 @@ public class OrderService {
 	@Autowired
 	private RestTemplate restTemplate;
 	
-
+	@Value("microservices.position-manager.createposition.uri")
+	private String createPositionURI;
+	
 	private Position createPosition(Position position) {
-		ResponseEntity<Position> positionResponse= restTemplate.postForEntity("http://INFRA-GATEWAY/position/createposition", position, Position.class);
+		ResponseEntity<Position> positionResponse= restTemplate.postForEntity(createPositionURI, position, Position.class);
 		return positionResponse.getBody();
 	}
 	
