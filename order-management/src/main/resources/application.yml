@@ -4,10 +4,6 @@ server:
 spring:
   application:
     name: ORDER-MANAGER
-  data:
-    mongodb:
-      uri: mongodb+srv://${MONGO_USER_ID}:${MONGO_PWD}@cluster0.dnhdt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
-      database: trading_infra
       
 management:
   health:

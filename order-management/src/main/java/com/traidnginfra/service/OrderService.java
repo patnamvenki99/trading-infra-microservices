@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -15,6 +16,7 @@ import com.traidnginfra.repository.OrderRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 @Service
+@RefreshScope
 public class OrderService {
 
 	@Autowired
@@ -23,7 +25,7 @@ public class OrderService {
 	@Autowired
 	private RestTemplate restTemplate;
 	
-	@Value("microservices.position-manager.createposition.uri")
+	@Value("${microservices.position-manager.createposition.uri}")
 	private String createPositionURI;
 	
 	private Position createPosition(Position position) {

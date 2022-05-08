@@ -1,0 +1,3 @@
+[submodule "tradinginfra-cloud-config"]
+	path = tradinginfra-cloud-config
+	url = https://github.com/patnamvenki99/tradinginfra-cloud-config.git
